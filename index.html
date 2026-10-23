@@ -1,274 +1,211 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>守护 · 留念</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>团建相册</title>
 <style>
-  :root {
-    --bg: #FAF9F6; --card: #FFFFFF; --text: #333333;
-    --sub: #888888; --border: #EAEAEA; --accent: #C9A66B;
-  }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    margin: 0; padding: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    padding-bottom: 90px;
-  }
-  header { padding: 40px 20px 20px; text-align: center; }
-  h1 { font-weight: 400; font-size: 24px; letter-spacing: 2px; margin: 0 0 8px; }
-  .sub { color: var(--sub); font-size: 13px; }
-  .config-bar { position: fixed; top: 15px; right: 15px; z-index: 100; }
-  .btn {
-    background: var(--card); border: 1px solid var(--border);
-    padding: 8px 16px; border-radius: 20px; font-size: 13px;
-    cursor: pointer; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-  .btn:active { background: #F0F0F0; }
-  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .modal {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-    z-index: 200; align-items: center; justify-content: center; padding: 20px;
-  }
-  .modal.active { display: flex; }
-  .modal-content {
-    background: var(--card); width: 100%; max-width: 340px;
-    border-radius: 16px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  }
-  .modal h2 { margin: 0 0 16px; font-size: 18px; font-weight: 500; }
-  .input-group { margin-bottom: 12px; }
-  .input-group label { display: block; font-size: 12px; color: var(--sub); margin-bottom: 4px; }
-  .input-group input {
-    width: 100%; padding: 10px; border: 1px solid var(--border);
-    border-radius: 8px; font-size: 14px; outline: none;
-  }
-  .input-group input:focus { border-color: var(--accent); }
-  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-  .modal-actions .btn { flex: 1; }
-  .group { margin: 20px; background: var(--card); border-radius: 16px; padding: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
-  .group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .group-title { font-size: 16px; font-weight: 500; }
-  .add-photo { font-size: 12px; color: var(--accent); cursor: pointer; }
-  .photos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .photo-card {
-    position: relative; border-radius: 12px; overflow: hidden;
-    background: #F5F5F5; aspect-ratio: 1;
-  }
-  .photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .photo-msg {
-    position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.85);
-    padding: 6px 8px; font-size: 12px; color: var(--text);
-  }
-  .add-card {
-    border: 1.5px dashed var(--border); display: flex; align-items: center; justify-content: center;
-    color: var(--sub); font-size: 28px; cursor: pointer;
-  }
-  .footer-actions { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); padding: 12px 20px; display: flex; gap: 10px; z-index: 50; }
-  .footer-actions .btn { flex: 1; }
-  input[type="file"] { display: none; }
-  .toast {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.7); color: #fff; padding: 12px 20px; border-radius: 8px;
-    font-size: 14px; display: none; z-index: 300;
-  }
-  .del-btn {
-    position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.5);
-    color: #fff; border: none; border-radius: 50%; width: 24px; height: 24px;
-    font-size: 14px; line-height: 24px; text-align: center; cursor: pointer;
-  }
+:root{color-scheme:light;--bg:#f7f2e7;--card:#fffdf7;--text:#4a4036;--sub:#9a8f80;--pri:#d4906a;--line:#e9e0cf;--soft:#efe7d6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;max-width:560px;margin:0 auto;padding:16px 14px 90px}
+h1{font-size:22px;margin:4px 2px 4px}
+.hint{font-size:13px;color:var(--sub);margin:0 2px 14px}
+.tabs{display:flex;background:var(--soft);border-radius:14px;padding:4px;margin-bottom:14px}
+.tabs button{flex:1;border:0;background:none;color:var(--sub);padding:10px;border-radius:11px;font-size:15px}
+.tabs button.on{background:var(--pri);color:#fff;box-shadow:0 2px 8px rgba(212,144,106,.35)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{position:relative;background:var(--card);border-radius:18px;padding:12px;border:1px solid var(--line);box-shadow:0 3px 10px rgba(120,100,60,.08);cursor:pointer}
+.ph{width:100%;aspect-ratio:1;border-radius:14px;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:30px;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover}
+.name{font-weight:600;margin-top:8px}
+.tag{display:inline-block;font-size:12px;color:var(--pri);background:var(--soft);padding:2px 9px;border-radius:20px;margin:4px 3px 0 0}
+.sub{font-size:13px;color:var(--sub);margin-top:4px}
+.cam{position:absolute;right:18px;top:18px;background:rgba(74,52,40,.6);color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.add{margin-top:14px;display:flex;gap:8px}
+input[type=text],.add select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px}
+.btn{border:0;background:var(--pri);color:#fff;padding:11px 16px;border-radius:12px;font-size:15px}
+.btn.ghost{background:none;color:var(--pri);border:1px solid var(--pri)}
+.btn.danger{background:none;color:#d9534f;border:1px solid #d9534f}
+.mask{position:fixed;inset:0;background:rgba(60,35,20,.5);display:none;align-items:flex-end;z-index:9}
+.mask.show{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:560px;margin:0 auto;border-radius:24px 24px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:90%;overflow:auto}
+.sheet .ph{aspect-ratio:4/3;max-height:300px}
+.row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--line);border-radius:20px;font-size:14px;background:var(--card)}
+.mem{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.mem .ph{width:40px;height:40px;aspect-ratio:auto;font-size:16px;border-radius:50%;flex:none}
+.pics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.pics img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.empty{color:var(--sub);text-align:center;padding:24px 0;font-size:14px}
+.cm{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:9px 12px;margin-top:8px;font-size:14px}
+.cm b{color:var(--pri)}
+.cm .x{float:right;color:var(--sub);font-size:12px}
+.cmt{display:flex;gap:8px;margin-top:10px}
+h3{margin:16px 0 0;font-size:15px}
 </style>
 </head>
 <body>
-
-<header>
-  <h1>守护 · 留念</h1>
-  <div class="sub">多图 · 留言 · 一人多组 · 云同步</div>
-</header>
-
-<div class="config-bar">
-  <button class="btn" onclick="openConfig()">云端配置</button>
-</div>
-
-<div id="app"></div>
-
-<div class="footer-actions">
-  <button class="btn" onclick="addGroup()">+ 新建组</button>
-  <button class="btn btn-primary" onclick="syncCloud()">☁ 同步</button>
-</div>
-
-<div class="modal" id="configModal">
-  <div class="modal-content">
-    <h2>云端配置</h2>
-    <div class="input-group">
-      <label>JSONBin Bin ID (已预置)</label>
-      <input id="cfg-bin" value="6ada3095ffd5d16053831c7c" readonly>
-    </div>
-    <div class="input-group">
-      <label>JSONBin X-MASTER-KEY (仅存本地)</label>
-      <input id="cfg-master" type="password" placeholder="粘贴你的 Master Key">
-    </div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeConfig()">取消</button>
-      <button class="btn btn-primary" onclick="saveConfig()">保存</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
+<h1>🧡 团建相册</h1>
+<p class="hint">大家看到的是同一份内容，上传和留言会同步</p>
+<div class="tabs"><button id="t1" class="on">成员</button><button id="t2">小组</button></div>
+<div id="list"><div class="empty">加载中…</div></div>
+<div class="add" id="addbar"></div>
+<div class="mask" id="mask"><div class="sheet" id="sheet"></div></div>
+<input type="file" id="file" accept="image/*" hidden>
 
 <script>
-let state = { groups: { "default": { name: "默认组", photos: [] } } };
-let config = { binId: "6ada3095ffd5d16053831c7c", masterKey: "" };
+// ===== 云配置（首次打开请点右上角“云配置”填写） =====
+var GIST_ID = "";
+var GITHUB_TOKEN = "";
+var DATA_FILE = "data.json";
+var GIST_RAW = "https://gist.githubusercontent.com/" + GIST_ID + "/raw/" + DATA_FILE;
+var GIST_API = "https://api.github.com/gists/" + GIST_ID;
+// ============================================================
+var tab="p",open=null,pending=null,pmax=640,me="",nick="";
+var D={people:[],groups:[],photos:[],comments:[]};
+try{nick=localStorage.getItem("nick")||""}catch(e){}
+try{me=localStorage.getItem("me")||"";if(!me){me="x"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);localStorage.setItem("me",me)}}catch(e){me="x"+Date.now().toString(36)}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function uid(){return "x"+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function by(a,id){return a.filter(function(x){return x.id===id})[0]}
+function gl(p){return p.gids||[]}
+function ph(s,t){return '<div class="ph">'+(s?'<img src="'+s+'">':t)+'</div>'}
+function tags(p){var a=gl(p).map(function(g){return by(D.groups,g)}).filter(Boolean);return a.length?a.map(function(g){return '<span class="tag">'+esc(g.name)+'</span>'}).join(""):'<span class="tag">未分组</span>'}
+function saveLocal(){try{localStorage.setItem("gist_cfg",JSON.stringify({gist:GIST_ID,token:GITHUB_TOKEN}))}catch(e){}}
+function loadLocal(){try{var c=JSON.parse(localStorage.getItem("gist_cfg"));if(c&&c.gist){GIST_ID=c.gist;GITHUB_TOKEN=c.token;GIST_RAW="https://gist.githubusercontent.com/"+GIST_ID+"/raw/"+DATA_FILE;GIST_API="https://api.github.com/gists/"+GIST_ID}}catch(e){}}
+function saveState(){try{localStorage.setItem("gist_state",JSON.stringify(D))}catch(e){}}
+function loadState(){try{var s=JSON.parse(localStorage.getItem("gist_state"));if(s&&s.people)D=s}catch(e){}}
+function showToast(t){var x=$("toast");x.innerText=t;x.style.display="block";setTimeout(function(){x.style.display="none"},1800)}
+function openConfig(){$("cfg-gist").value=GIST_ID;$("cfg-token").value=GITHUB_TOKEN;$("configModal").classList.add("active")}
+function closeConfig(){$("configModal").classList.remove("active")}
+function saveConfig(){GIST_ID=$("cfg-gist").value.trim();GITHUB_TOKEN=$("cfg-token").value.trim();GIST_RAW="https://gist.githubusercontent.com/"+GIST_ID+"/raw/"+DATA_FILE;GIST_API="https://api.github.com/gists/"+GIST_ID;saveLocal();closeConfig();showToast("已保存配置")}
 
-function loadLocal() {
-  const c = localStorage.getItem("shouhu_config_v2");
-  if (c) config = {...config, ...JSON.parse(c)};
-  const s = localStorage.getItem("shouhu_state_v2");
-  if (s) state = JSON.parse(s);
-  render();
-}
-function saveLocal() {
-  localStorage.setItem("shouhu_config_v2", JSON.stringify(config));
-  localStorage.setItem("shouhu_state_v2", JSON.stringify(state));
-  render();
-}
-
-function openConfig() {
-  document.getElementById("cfg-bin").value = config.binId;
-  document.getElementById("cfg-master").value = config.masterKey;
-  document.getElementById("configModal").classList.add("active");
-}
-function closeConfig() { document.getElementById("configModal").classList.remove("active"); }
-function saveConfig() {
-  config.binId = document.getElementById("cfg-bin").value.trim();
-  config.masterKey = document.getElementById("cfg-master").value.trim();
-  localStorage.setItem("shouhu_config_v2", JSON.stringify(config));
-  showToast("已保存（仅本机）");
-  closeConfig();
-}
-
-function addGroup() {
-  const id = "g"+Date.now();
-  const name = prompt("组名：") || "新组";
-  state.groups[id] = { name, photos: [] };
-  saveLocal();
-}
-
-function triggerUpload(id) {
-  document.getElementById("file-"+id).click();
+async function syncCloud(silent){
+  if(!GIST_ID||!GITHUB_TOKEN){if(!silent)showToast("请先点右上角云配置填写 Gist ID 和 Token");return}
+  try{
+    var r=await fetch(GIST_RAW,{cache:"no-store"});
+    if(r.ok){var j=await r.json();if(j&&j.people){D=j;saveState();render();if(open)sheet()}}
+    var g=await fetch(GIST_API,{method:"PATCH",headers:{Authorization:"Bearer "+GITHUB_TOKEN,"Content-Type":"application/json"},body:JSON.stringify({files:{}})});
+    var body={files:{}};body.files[DATA_FILE]={content:JSON.stringify(D)};
+    g=await fetch(GIST_API,{method:"PATCH",headers:{Authorization:"Bearer "+GITHUB_TOKEN,"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(g.ok){if(!silent)showToast("☁ 已同步")}else{if(!silent)showToast("写入失败:"+g.status)}
+  }catch(e){if(!silent)showToast("同步失败，检查网络或Token")}
 }
 
-function handleUpload(e, gid) {
-  const files = [...e.target.files];
-  if (!files.length) return;
-  showToast("压缩处理中...");
-  const tasks = files.map(f => compressImage(f));
-  Promise.all(tasks).then(results => {
-    results.forEach(dataUrl => {
-      const pid = "p"+Date.now()+Math.random();
-      state.groups[gid].photos.push({ id: pid, url: dataUrl, msg: "" });
-    });
-    saveLocal();
-    syncCloud(true);
-    showToast("已添加");
-  });
-  e.target.value = "";
-}
-
-function compressImage(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const max = 800;
-        let w = img.width, h = img.height;
-        if (w > max) { h = h * max / w; w = max; }
-        if (h > max) { w = w * max / h; h = max; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", 0.7));
-      };
-      img.onerror = reject;
-      img.src = e.target.result;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-function editMsg(gid, pid) {
-  const p = state.groups[gid].photos.find(x=>x.id===pid);
-  const m = prompt("留言：", p.msg);
-  if (m !== null) { p.msg = m; saveLocal(); syncCloud(true); }
-}
-
-function delPhoto(gid, pid) {
-  if (!confirm("删除这张照片？")) return;
-  state.groups[gid].photos = state.groups[gid].photos.filter(x=>x.id!==pid);
-  saveLocal(); syncCloud(true);
-}
-
-function render() {
-  const app = document.getElementById("app");
-  app.innerHTML = "";
-  Object.entries(state.groups).forEach(([gid, g]) => {
-    let html = `<div class="group" data-id="${gid}">
-      <div class="group-header"><div class="group-title">${g.name}</div>
-      <div class="add-photo" onclick="triggerUpload('${gid}')">+ 添加照片</div></div>
-      <div class="photos">`;
-    g.photos.forEach(p => {
-      html += `<div class="photo-card">
-        <img src="${p.url}" loading="lazy">
-        <button class="del-btn" onclick="delPhoto('${gid}','${p.id}')">×</button>
-        ${p.msg ? `<div class="photo-msg" onclick="editMsg('${gid}','${p.id}')">${p.msg}</div>` : `<div class="photo-msg" style="color:var(--sub);cursor:pointer" onclick="editMsg('${gid}','${p.id}')">点此留言</div>`}
-      </div>`;
-    });
-    html += `<div class="photo-card add-card" onclick="triggerUpload('${gid}')">+</div>
-      </div><input type="file" id="file-${gid}" multiple accept="image/*" onchange="handleUpload(event, '${gid}')">
-    </div>`;
-    app.innerHTML += html;
-  });
-}
-
-async function syncCloud(silent) {
-  if (!config.masterKey) {
-    if (!silent) showToast("请先配置 Master Key");
-    return;
+function render(){
+  $("t1").className=tab==="p"?"on":"";$("t2").className=tab==="g"?"on":"";
+  var h,ab;
+  if(tab==="p"){
+    h=D.people.length?'<div class="grid">'+D.people.map(function(p){return '<div class="card" data-p="'+p.id+'">'+ph(p.photo,"👤")+'<span class="cam" data-cam="'+p.id+'">📷</span><div class="name">'+esc(p.name)+'</div>'+tags(p)+'</div>'}).join("")+'</div>':'<div class="empty">还没有成员，在下方添加<br><br><button class="btn ghost" id="seed">一键添加 10 个示例成员</button></div>';
+    ab='<input type="text" id="nn" placeholder="新成员姓名"><select id="ng"><option value="">未分组</option>'+D.groups.map(function(g){return '<option value="'+g.id+'">'+esc(g.name)+'</option>'}).join("")+'</select><button class="btn" id="addp">添加</button>';
+  }else{
+    h=D.groups.length?'<div class="grid">'+D.groups.map(function(g){var n=D.people.filter(function(p){return gl(p).indexOf(g.id)>-1}).length,c=D.photos.filter(function(x){return x.gid===g.id});return '<div class="card" data-g="'+g.id+'">'+ph(c[0]&&c[0].data,"👥")+'<div class="name">'+esc(g.name)+'</div><div class="sub">'+n+' 人 · '+c.length+' 张照片</div></div>'}).join("")+'</div>':'<div class="empty">还没有小组，在下方添加</div>';
+    ab='<input type="text" id="nn" placeholder="新小组名称"><button class="btn" id="addg">添加</button>';
   }
-  if (!silent) showToast("同步中...");
-  try {
-    const headers = { "X-Master-Key": config.masterKey, "Content-Type": "application/json" };
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${config.binId}/latest`, { headers });
-    if (r.ok) {
-      const j = await r.json();
-      if (j.record) {
-        state = j.record;
-        saveLocal();
-        if (!silent) showToast("☁ 已拉取");
-      }
-    } else {
-      await fetch(`https://api.jsonbin.io/v3/b/${config.binId}`, {
-        method: "PUT", headers, body: JSON.stringify(state)
-      });
-      if (!silent) showToast("☁ 已初始化");
-    }
-  } catch(e) {
-    if (!silent) showToast("同步失败，请检查网络");
-  }
+  $("list").innerHTML=h;$("addbar").innerHTML=ab;
+  if($("addp"))$("addp").onclick=function(){var v=$("nn").value.trim();if(!v)return;var g=$("ng").value;D.people.push({id:uid(),name:v,gids:g?[g]:[],photo:"",ts:Date.now()});saveState();syncCloud(true);render()};
+  if($("addg"))$("addg").onclick=function(){var v=$("nn").value.trim();if(!v)return;D.groups.push({id:uid(),name:v,ts:Date.now()});saveState();syncCloud(true);render()};
+  if($("seed"))$("seed").onclick=function(){for(var i=1;i<=10;i++)D.people.push({id:uid(),name:"成员"+i,gids:[],photo:"",ts:Date.now()+i});saveState();syncCloud(true);render()};
 }
+$("t1").onclick=function(){tab="p";render()};
+$("t2").onclick=function(){tab="g";render()};
+$("list").onclick=function(e){
+  var cm=e.target.closest(".cam");
+  if(cm){var id=cm.dataset.cam;pmax=640;pending=function(d){by(D.people,id).photo=d;saveState();syncCloud(true);render()};$("file").click();return}
+  var c=e.target.closest(".card");if(!c)return;
+  open=c.dataset.p?{t:"p",id:c.dataset.p}:{t:"g",id:c.dataset.g};sheet();
+};
+$("mask").onclick=function(e){if(e.target===$("mask"))closeS()};
+function closeS(){open=null;$("mask").className="mask"}
 
-function showToast(t) {
-  const x = document.getElementById("toast");
-  x.innerText = t; x.style.display = "block";
-  setTimeout(()=>x.style.display="none", 2000);
+function sheet(){
+  if(!open)return;var h;
+  var ci=$("ci"),keep=ci?ci.value:"",foc=ci&&document.activeElement===ci;
+  if(open.t==="p")h=sP();else if(open.t==="g")h=sG();else h=sPh();
+  if(h===null){closeS();return}
+  $("sheet").innerHTML=h;$("mask").className="mask show";
+  if($("ci")&&keep){$("ci").value=keep;if(foc)$("ci").focus()}
+  cmts();
 }
-
-loadLocal();
-if (config.masterKey) setTimeout(()=>syncCloud(true), 1000);
+var CM='<h3>💬 照片留言</h3><div id="cm"></div><div class="cmt"><input type="text" id="ci" placeholder="写下留言…" maxlength="300"><button class="btn" data-a="cs">发送</button></div>';
+function sP(){
+  var p=by(D.people,open.id);if(!p)return null;
+  var gs=gl(p).map(function(g){return by(D.groups,g)}).filter(Boolean);
+  return ph(p.photo,"👤")+'<h2 style="margin:12px 0 4px">'+esc(p.name)+'</h2><div>所在小组:'+(gs.length?gs.map(function(g){return '<span class="tag" data-a="goG" data-v="'+g.id+'" style="cursor:pointer">'+esc(g.name)+' ›</span>'}).join(""):'未分组')+'</div>'+
+  '<div class="sub" style="margin-top:12px">勾选所属小组（可多选）</div><div class="row" style="margin-top:6px">'+(D.groups.length?D.groups.map(function(g){return '<label class="chk"><input type="checkbox" data-gc="'+g.id+'"'+(gl(p).indexOf(g.id)>-1?' checked':'')+'> '+esc(g.name)+'</label>'}).join(""):'<span class="sub">还没有小组</span>')+'</div>'+
+  '<div class="row"><button class="btn" data-a="upP">'+(p.photo?"更换照片":"上传照片")+'</button><button class="btn ghost" data-a="rnP">改名</button><button class="btn danger" data-a="delP">删除</button><button class="btn ghost" data-a="close">关闭</button></div>'+CM;
+}
+function sG(){
+  var g=by(D.groups,open.id);if(!g)return null;
+  var ms=D.people.filter(function(p){return gl(p).indexOf(g.id)>-1}),ps=D.photos.filter(function(x){return x.gid===g.id});
+  return '<h2 style="margin:0 0 4px">'+esc(g.name)+'</h2><div class="sub">'+ms.length+' 位成员</div>'+
+  (ms.length?ms.map(function(p){return '<div class="mem" data-a="goP" data-v="'+p.id+'">'+ph(p.photo,"👤")+'<span>'+esc(p.name)+'</span></div>'}).join(""):'<div class="empty">暂无成员</div>')+
+  '<h3>小组照片</h3>'+(ps.length?'<div class="pics">'+ps.map(function(x){return '<img src="'+x.data+'" data-a="ph" data-v="'+x.id+'">'}).join("")+'</div><div class="sub">点开照片可以留言</div>':'<div class="empty">还没有照片</div>')+
+  '<div class="row"><button class="btn" data-a="upG">上传小组照片</button><button class="btn ghost" data-a="rnG">改名</button><button class="btn danger" data-a="delG">删除小组</button><button class="btn ghost" data-a="close">关闭</button></div>';
+}
+function sPh(){
+  var x=by(D.photos,open.id);if(!x)return null;
+  return '<div class="ph" style="aspect-ratio:auto;max-height:none"><img src="'+x.data+'" style="height:auto"></div>'+
+  '<div class="row"><button class="btn ghost" data-a="back">‹ 返回小组</button><button class="btn danger" data-a="delPh">删除照片</button></div>'+CM;
+}
+function ckey(){return open.t==="p"?"p:"+open.id:"g:"+open.id}
+function cmts(){
+  var el=$("cm");if(!open||!el)return;
+  var k=ckey(),a=D.comments.filter(function(c){return c.key===k});
+  el.innerHTML=a.length?a.map(function(c){
+    var t=new Date(c.ts).toLocaleString("zh-CN",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});
+    return '<div class="cm">'+(me&&c.uid===me?'<span class="x" data-a="cd" data-v="'+c.id+'">删除</span>':'')+'<b>'+esc(c.nick||"匿名")+'</b> <span class="sub">'+t+'</span><div>'+esc(c.text)+'</div></div>'}).join(""):'<div class="sub">还没有留言，来写第一条吧</div>';
+}
+function sendC(){
+  var i=$("ci"),t=i.value.trim();if(!t)return;
+  if(!nick){var n=prompt("给自己起个昵称，留言时会显示");if(!n||!n.trim())return;nick=n.trim().slice(0,12);try{localStorage.setItem("nick",nick)}catch(e){}}
+  i.value="";D.comments.push({id:uid(),key:ckey(),text:t.slice(0,300),nick:nick,uid:me,ts:Date.now()});saveState();syncCloud(true);cmts();
+}
+$("sheet").onkeydown=function(e){if(e.key==="Enter"&&e.target.id==="ci")sendC()};
+$("sheet").onchange=function(e){
+  var k=e.target.dataset.gc;if(!k||open.t!=="p")return;
+  var p=by(D.people,open.id),a=gl(p).slice(),i=a.indexOf(k);
+  if(e.target.checked&&i<0)a.push(k);if(!e.target.checked&&i>-1)a.splice(i,1);
+  p.gids=a;saveState();syncCloud(true);
+};
+$("sheet").onclick=function(e){
+  var el=e.target.closest("[data-a]");if(!el)return;var a=el.dataset.a,v=el.dataset.v;
+  if(a==="close")closeS();
+  else if(a==="goG"){open={t:"g",id:v};sheet()}
+  else if(a==="goP"){open={t:"p",id:v};sheet()}
+  else if(a==="ph"){open={t:"gp",id:v};sheet()}
+  else if(a==="back"){var x=by(D.photos,open.id);open={t:"g",id:x?x.gid:""};sheet()}
+  else if(a==="upP"){var id=open.id;pmax=640;pending=function(d){by(D.people,id).photo=d;saveState();syncCloud(true);render()};$("file").click()}
+  else if(a==="upG"){var gid=open.id;pmax=800;pending=function(d){D.photos.push({id:uid(),gid:gid,data:d,ts:Date.now()});saveState();syncCloud(true);render()};$("file").click()}
+  else if(a==="rnP"){var p=by(D.people,open.id),n=prompt("新名字",p.name);if(n&&n.trim()){p.name=n.trim();saveState();syncCloud(true);render()}}
+  else if(a==="rnG"){var g=by(D.groups,open.id),m=prompt("新名称",g.name);if(m&&m.trim()){g.name=m.trim();saveState();syncCloud(true);render()}}
+  else if(a==="delP"){var q=by(D.people,open.id);if(confirm("删除 "+q.name+"?")){D.people=D.people.filter(function(x){return x.id!==q.id});D.comments=D.comments.filter(function(c){return c.key!=="p:"+q.id});closeS();saveState();syncCloud(true);render()}}
+  else if(a==="delG"){var r=by(D.groups,open.id);if(confirm("删除小组 "+r.name+"?成员会保留，但会移出该小组")){D.people.forEach(function(p){if(gl(p).indexOf(r.id)>-1)p.gids=gl(p).filter(function(z){return z!==r.id})});D.photos.filter(function(x){return x.gid===r.id}).forEach(function(x){D.comments=D.comments.filter(function(c){return c.key!=="g:"+x.id})});D.photos=D.photos.filter(function(x){return x.gid!==r.id});D.groups=D.groups.filter(function(g){return g.id!==r.id});closeS();saveState();syncCloud(true);render()}}
+  else if(a==="delPh"){if(confirm("删除这张照片?")){var s=by(D.photos,open.id);D.photos=D.photos.filter(function(x){return x.id!==s.id});D.comments=D.comments.filter(function(c){return c.key!=="g:"+s.id});open={t:"g",id:s.gid};saveState();syncCloud(true);sheet()}}
+  else if(a==="cs")sendC();
+  else if(a==="cd"){if(confirm("删除这条留言?")){D.comments=D.comments.filter(function(c){return c.id!==v});saveState();syncCloud(true);cmts()}}
+};
+$("file").onchange=function(){
+  var f=this.files[0];this.value="";if(!f||!pending)return;
+  var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){
+    var k=Math.min(1,pmax/Math.max(im.width,im.height)),c=document.createElement("canvas");
+    c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+    var cb=pending;pending=null;cb(c.toDataURL("image/jpeg",.7))};im.src=fr.result};fr.readAsDataURL(f);
+};
+loadLocal();loadState();render();
+syncCloud(true);
 </script>
+<div class="config-bar" style="position:fixed;top:15px;right:15px;z-index:100"><button class="btn" onclick="openConfig()">云配置</button></div>
+<div class="modal" id="configModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;padding:20px">
+<div class="modal-content" style="background:var(--card);width:100%;max-width:340px;border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.1)">
+<h2 style="margin:0 0 16px;font-size:18px;font-weight:500">云配置（Gist）</h2>
+<div class="input-group" style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:4px">Gist ID</label><input id="cfg-gist" placeholder="如 a1b2c3d4e5" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:14px"></div>
+<div class="input-group" style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:4px">GitHub Token（只勾 gist 权限）</label><input id="cfg-token" type="password" placeholder="ghp_xxx" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:14px"></div>
+<div style="display:flex;gap:10px;margin-top:20px"><button class="btn ghost" onclick="closeConfig()" style="flex:1">取消</button><button class="btn" onclick="saveConfig()" style="flex:1">保存</button></div>
+</div></div>
+<div class="toast" id="toast" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.7);color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;display:none;z-index:300"></div>
 </body>
 </html>
 
