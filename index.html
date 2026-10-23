@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>守护 · 留念</title>
+<style>
+  :root {
+    --bg: #FAF9F6; --card: #FFFFFF; --text: #333333;
+    --sub: #888888; --border: #EAEAEA; --accent: #C9A66B;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding-bottom: 90px;
+  }
+  header { padding: 40px 20px 20px; text-align: center; }
+  h1 { font-weight: 400; font-size: 24px; letter-spacing: 2px; margin: 0 0 8px; }
+  .sub { color: var(--sub); font-size: 13px; }
+  .config-bar { position: fixed; top: 15px; right: 15px; z-index: 100; }
+  .btn {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 8px 16px; border-radius: 20px; font-size: 13px;
+    cursor: pointer; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .btn:active { background: #F0F0F0; }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .modal {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    z-index: 200; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal.active { display: flex; }
+  .modal-content {
+    background: var(--card); width: 100%; max-width: 340px;
+    border-radius: 16px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  .modal h2 { margin: 0 0 16px; font-size: 18px; font-weight: 500; }
+  .input-group { margin-bottom: 12px; }
+  .input-group label { display: block; font-size: 12px; color: var(--sub); margin-bottom: 4px; }
+  .input-group input {
+    width: 100%; padding: 10px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 14px; outline: none;
+  }
+  .input-group input:focus { border-color: var(--accent); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions .btn { flex: 1; }
+  .group { margin: 20px; background: var(--card); border-radius: 16px; padding: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
+  .group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .group-title { font-size: 16px; font-weight: 500; }
+  .add-photo { font-size: 12px; color: var(--accent); cursor: pointer; }
+  .photos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .photo-card {
+    position: relative; border-radius: 12px; overflow: hidden;
+    background: #F5F5F5; aspect-ratio: 1;
+  }
+  .photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-msg {
+    position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.85);
+    padding: 6px 8px; font-size: 12px; color: var(--text);
+  }
+  .add-card {
+    border: 1.5px dashed var(--border); display: flex; align-items: center; justify-content: center;
+    color: var(--sub); font-size: 28px; cursor: pointer;
+  }
+  .footer-actions { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); padding: 12px 20px; display: flex; gap: 10px; z-index: 50; }
+  .footer-actions .btn { flex: 1; }
+  input[type="file"] { display: none; }
+  .toast {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7); color: #fff; padding: 12px 20px; border-radius: 8px;
+    font-size: 14px; display: none; z-index: 300;
+  }
+  .del-btn {
+    position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.5);
+    color: #fff; border: none; border-radius: 50%; width: 24px; height: 24px;
+    font-size: 14px; line-height: 24px; text-align: center; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>守护 · 留念</h1>
+  <div class="sub">多图 · 留言 · 一人多组 · 云同步</div>
+</header>
+
+<div class="config-bar">
+  <button class="btn" onclick="openConfig()">云端配置</button>
+</div>
+
+<div id="app"></div>
+
+<div class="footer-actions">
+  <button class="btn" onclick="addGroup()">+ 新建组</button>
+  <button class="btn btn-primary" onclick="syncCloud()">☁ 同步</button>
+</div>
+
+<div class="modal" id="configModal">
+  <div class="modal-content">
+    <h2>云端配置</h2>
+    <div class="input-group">
+      <label>JSONBin Bin ID (已预置)</label>
+      <input id="cfg-bin" value="6ada3095ffd5d16053831c7c" readonly>
+    </div>
+    <div class="input-group">
+      <label>JSONBin X-MASTER-KEY (仅存本地)</label>
+      <input id="cfg-master" type="password" placeholder="粘贴你的 Master Key">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeConfig()">取消</button>
+      <button class="btn btn-primary" onclick="saveConfig()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let state = { groups: { "default": { name: "默认组", photos: [] } } };
+let config = { binId: "6ada3095ffd5d16053831c7c", masterKey: "" };
+
+function loadLocal() {
+  const c = localStorage.getItem("shouhu_config_v2");
+  if (c) config = {...config, ...JSON.parse(c)};
+  const s = localStorage.getItem("shouhu_state_v2");
+  if (s) state = JSON.parse(s);
+  render();
+}
+function saveLocal() {
+  localStorage.setItem("shouhu_config_v2", JSON.stringify(config));
+  localStorage.setItem("shouhu_state_v2", JSON.stringify(state));
+  render();
+}
+
+function openConfig() {
+  document.getElementById("cfg-bin").value = config.binId;
+  document.getElementById("cfg-master").value = config.masterKey;
+  document.getElementById("configModal").classList.add("active");
+}
+function closeConfig() { document.getElementById("configModal").classList.remove("active"); }
+function saveConfig() {
+  config.binId = document.getElementById("cfg-bin").value.trim();
+  config.masterKey = document.getElementById("cfg-master").value.trim();
+  localStorage.setItem("shouhu_config_v2", JSON.stringify(config));
+  showToast("已保存（仅本机）");
+  closeConfig();
+}
+
+function addGroup() {
+  const id = "g"+Date.now();
+  const name = prompt("组名：") || "新组";
+  state.groups[id] = { name, photos: [] };
+  saveLocal();
+}
+
+function triggerUpload(id) {
+  document.getElementById("file-"+id).click();
+}
+
+function handleUpload(e, gid) {
+  const files = [...e.target.files];
+  if (!files.length) return;
+  showToast("压缩处理中...");
+  const tasks = files.map(f => compressImage(f));
+  Promise.all(tasks).then(results => {
+    results.forEach(dataUrl => {
+      const pid = "p"+Date.now()+Math.random();
+      state.groups[gid].photos.push({ id: pid, url: dataUrl, msg: "" });
+    });
+    saveLocal();
+    syncCloud(true);
+    showToast("已添加");
+  });
+  e.target.value = "";
+}
+
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const max = 800;
+        let w = img.width, h = img.height;
+        if (w > max) { h = h * max / w; w = max; }
+        if (h > max) { w = w * max / h; h = max; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.7));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function editMsg(gid, pid) {
+  const p = state.groups[gid].photos.find(x=>x.id===pid);
+  const m = prompt("留言：", p.msg);
+  if (m !== null) { p.msg = m; saveLocal(); syncCloud(true); }
+}
+
+function delPhoto(gid, pid) {
+  if (!confirm("删除这张照片？")) return;
+  state.groups[gid].photos = state.groups[gid].photos.filter(x=>x.id!==pid);
+  saveLocal(); syncCloud(true);
+}
+
+function render() {
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+  Object.entries(state.groups).forEach(([gid, g]) => {
+    let html = `<div class="group" data-id="${gid}">
+      <div class="group-header"><div class="group-title">${g.name}</div>
+      <div class="add-photo" onclick="triggerUpload('${gid}')">+ 添加照片</div></div>
+      <div class="photos">`;
+    g.photos.forEach(p => {
+      html += `<div class="photo-card">
+        <img src="${p.url}" loading="lazy">
+        <button class="del-btn" onclick="delPhoto('${gid}','${p.id}')">×</button>
+        ${p.msg ? `<div class="photo-msg" onclick="editMsg('${gid}','${p.id}')">${p.msg}</div>` : `<div class="photo-msg" style="color:var(--sub);cursor:pointer" onclick="editMsg('${gid}','${p.id}')">点此留言</div>`}
+      </div>`;
+    });
+    html += `<div class="photo-card add-card" onclick="triggerUpload('${gid}')">+</div>
+      </div><input type="file" id="file-${gid}" multiple accept="image/*" onchange="handleUpload(event, '${gid}')">
+    </div>`;
+    app.innerHTML += html;
+  });
+}
+
+async function syncCloud(silent) {
+  if (!config.masterKey) {
+    if (!silent) showToast("请先配置 Master Key");
+    return;
+  }
+  if (!silent) showToast("同步中...");
+  try {
+    const headers = { "X-Master-Key": config.masterKey, "Content-Type": "application/json" };
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${config.binId}/latest`, { headers });
+    if (r.ok) {
+      const j = await r.json();
+      if (j.record) {
+        state = j.record;
+        saveLocal();
+        if (!silent) showToast("☁ 已拉取");
+      }
+    } else {
+      await fetch(`https://api.jsonbin.io/v3/b/${config.binId}`, {
+        method: "PUT", headers, body: JSON.stringify(state)
+      });
+      if (!silent) showToast("☁ 已初始化");
+    }
+  } catch(e) {
+    if (!silent) showToast("同步失败，请检查网络");
+  }
+}
+
+function showToast(t) {
+  const x = document.getElementById("toast");
+  x.innerText = t; x.style.display = "block";
+  setTimeout(()=>x.style.display="none", 2000);
+}
+
+loadLocal();
+if (config.masterKey) setTimeout(()=>syncCloud(true), 1000);
+</script>
+</body>
+</html>
+
