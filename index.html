@@ -2,144 +2,157 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>团建相册</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;background:#f7f0e6;color:#5a4a3a;padding-bottom:calc(70px + env(safe-area-inset-bottom, 0px))}
-  .top{display:flex;align-items:center;justify-content:space-between;padding:16px;background:#f7f0e6}
-  .title{font-size:24px;font-weight:bold;display:flex;align-items:center;gap:8px}
-  .sub{font-size:13px;color:#a08b7a;margin-top:4px}
-  .btn{background:#d99a6c;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-size:14px;cursor:pointer}
-  .btn.ghost{background:transparent;color:#d99a6c;border:1px solid #d99a6c}
-  .tabs{display:flex;background:#eadcc8;border-radius:20px;margin:0 16px;overflow:hidden}
-  .tab{flex:1;text-align:center;padding:10px;font-size:15px;color:#a08b7a;cursor:pointer}
-  .tab.active{background:#d99a6c;color:#fff}
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
-  .card{background:#fff;border-radius:16px;padding:12px;position:relative;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-  .avatar{background:#eadcc8;border-radius:12px;height:140px;display:flex;align-items:center;justify-content:center;font-size:48px;color:#7ba3c4;overflow:hidden}
-  .avatar img{width:100%;height:100%;object-fit:cover}
-  .name{margin-top:8px;font-size:16px;font-weight:bold}
-  .tag{display:inline-block;background:#f0e0d0;color:#d99a6c;font-size:12px;border-radius:10px;padding:2px 8px;margin-top:4px}
-  .cam{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.4);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
-  .addbar{display:flex;gap:8px;padding:16px;align-items:center}
-  .addbar input{flex:1;padding:8px 12px;border-radius:12px;border:1px solid #d99a6c;background:#fff}
-  .addbar select{padding:8px;border-radius:12px;border:1px solid #d99a6c;background:#fff}
-  
-  /* 底部同步栏（核心修复） */
-  .bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eadcc8;padding:10px 16px calc(10px + env(safe-area-inset-bottom, 0px));display:flex;justify-content:center;z-index:999}
-  .sync-btn{background:#d99a6c;color:#fff;border:none;border-radius:24px;padding:10px 24px;font-size:15px;cursor:pointer;width:100%;max-width:300px}
-  
-  /* 弹窗 */
-  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:20px}
-  .modal.active{display:flex}
-  .modal-box{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:320px}
-  .modal h3{margin-bottom:12px}
-  .modal label{display:block;font-size:13px;margin:8px 0 4px}
-  .modal input{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;font-size:14px}
-  .modal .actions{display:flex;gap:8px;margin-top:16px}
-  .modal .actions button{flex:1;padding:8px;border-radius:8px;border:none;cursor:pointer}
-  
-  .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.7);color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;z-index:2000;display:none}
+  body { font-family: sans-serif; background: #f7f0e6; margin: 0; padding: 10px; color: #333; }
+  h1 { font-size: 22px; margin: 10px 0; }
+  .desc { color: #666; font-size: 14px; margin-bottom: 10px; }
+  button { background: #d98e5a; color: #fff; border: none; padding: 10px 16px; border-radius: 8px; font-size: 16px; margin: 5px 0; cursor: pointer; }
+  input, select { padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; margin: 5px 0; box-sizing: border-box; }
+  .tabs { display: flex; gap: 10px; margin: 15px 0; }
+  .tab { background: #eee; color: #333; }
+  .tab.active { background: #d98e5a; color: #fff; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .card { background: #fff; padding: 10px; border-radius: 12px; text-align: center; }
+  .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; background: #ddd; }
+  .tag { display: inline-block; background: #f0e0d0; color: #d98e5a; border-radius: 6px; padding: 2px 8px; font-size: 12px; margin-top: 5px; }
+  .add-form { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+  .add-form input { flex: 1; min-width: 120px; }
+  #toast { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #fff; padding: 10px 20px; border-radius: 8px; z-index: 9999; }
+  #configModal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9998; align-items: center; justify-content: center; }
+  #configModal.active { display: flex; }
+  .modal-box { background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 320px; }
+  .modal-box label { display: block; margin: 10px 0 5px; font-size: 14px; }
+  .modal-box input { width: 100%; margin: 0; }
+  .sync-area { margin-top: 30px; padding: 20px 0; text-align: center; border-top: 1px solid #ccc; }
 </style>
 </head>
 <body>
-
-<div class="top">
-  <div>
-    <div class="title">🧡 团建相册</div>
-    <div class="sub">大家看到的是同一份内容，上传和留言会同步</div>
-  </div>
-  <button class="btn ghost" id="cfgBtn">云配置</button>
-</div>
+<div id="toast"></div>
+<h1>🧡 团建相册</h1>
+<div class="desc">大家看到的是同一份内容，上传和留言会同步</div>
+<button id="cfgBtn" style="float:right;">云配置</button>
 
 <div class="tabs">
-  <div class="tab active" id="tabP">成员</div>
-  <div class="tab" id="tabG">小组</div>
+  <button class="tab active" id="tabP">成员</button>
+  <button class="tab" id="tabG">小组</button>
 </div>
 
-<div class="grid" id="grid"></div>
+<div id="list" class="grid"></div>
 
-<div class="addbar" id="addBar">
-  <input placeholder="新成员姓名" id="newName">
+<div class="add-form">
+  <input type="text" id="newName" placeholder="新成员姓名">
   <select id="newGroup"><option>未分组</option></select>
-  <button class="btn" onclick="addMember()">添加</button>
+  <button id="addBtn">添加</button>
 </div>
 
-<!-- 底部同步按钮（现在一定会显示） -->
-<div class="bottom-bar">
-  <button class="sync-btn" onclick="syncCloud(true)">☁ 同步</button>
+<div class="sync-area">
+  <button id="syncBtn">☁ 同步到云端</button>
 </div>
 
-<!-- 云配置弹窗 -->
-<div class="modal" id="configModal">
+<div id="configModal">
   <div class="modal-box">
     <h3>云配置</h3>
-    <label>Gist ID</label>
-    <input id="cfg-gist" placeholder="GitHub Gist ID">
-    <label>Token (仅勾选 gist 权限)</label>
-    <input id="cfg-token" type="password" placeholder="ghp_...">
-    <div class="actions">
-      <button onclick="closeConfig()" style="background:#eee">取消</button>
-      <button onclick="saveConfig()" style="background:#d99a6c;color:#fff">保存</button>
-    </div>
+    <label>Gist ID</label><input id="cfg-gist">
+    <label>GitHub Token</label><input id="cfg-token" type="password">
+    <button id="saveCfg">保存并同步</button>
+    <button onclick="document.getElementById('configModal').classList.remove('active')" style="background:#999;">取消</button>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<input type="file" id="file" accept="image/*" style="display:none">
 
 <script>
-let GIST_ID=localStorage.getItem("gist_id")||"",GITHUB_TOKEN=localStorage.getItem("gist_token")||"";
-let D={people:[{id:"p1",name:"亚梦",gids:[]}],groups:[{id:"g1",name:"未分组"}],photos:[],comments:[]};
-let open={t:"p",id:"p1"},pending=null,pmax=800;
+let D = {people:[{id:'1',name:'亚梦',gids:[],img:''}],groups:[],ts:0};
+let GIST_ID=localStorage.getItem("gist_id")||"";
+let GITHUB_TOKEN=localStorage.getItem("gist_token")||"";
+let pending=null;
+const pmax=600;
 
-const $=id=>document.getElementById(id);
-const uid=()=>Math.random().toString(36).slice(2,9);
-const gl=p=>p.gids||[];
-const by=(arr,id)=>arr.find(x=>x.id===id);
+function $(id){return document.getElementById(id)}
+function uid(){return Math.random().toString(36).slice(2,9)}
+function by(arr,id){return arr.find(x=>x.id===id)}
+function showToast(t){const o=$("toast");o.textContent=t;o.style.display="block";setTimeout(()=>o.style.display="none",1800)}
+function saveState(){localStorage.setItem("data",JSON.stringify(D))}
+function loadState(){try{const s=localStorage.getItem("data");if(s)D=JSON.parse(s)}catch(e){}}
+
+loadState();
 
 function render(){
-  const grid=$("grid");grid.innerHTML="";
+  const list=$("list"); list.innerHTML="";
   D.people.forEach(p=>{
-    const div=document.createElement("div");div.className="card";
-    div.innerHTML=`<div class="avatar">${p.img?"<img src='"+p.img+"'>":"👤"}</div><div class="cam" onclick="event.stopPropagation();upPhoto('${p.id}')">📷</div><div class="name">${p.name}</div><div class="tag">${gl(p)[0]?by(D.groups,gl(p)[0]).name:"未分组"}</div>`;
-    div.onclick=()=>{open={t:"p",id:p.id};showToast("已选 "+p.name)};grid.appendChild(div);
+    const div=document.createElement("div"); div.className="card";
+    div.innerHTML=`<div>${p.img?'<img src="'+p.img+'">':'<div style="height:120px;background:#ddd;border-radius:8px;"></div>'}</div><div style="margin-top:5px;font-weight:bold">${p.name}</div><div class="tag">${p.gids[0]||'未分组'}</div><button onclick="upPhoto('${p.id}')">📷上传</button>`;
+    list.appendChild(div);
   });
+  const sel=$("newGroup"); sel.innerHTML='<option>未分组</option>'+D.groups.map(g=>`<option>${g}</option>`).join('');
 }
-function upPhoto(id){pending=d=>{by(D.people,id).img=d;saveState();syncCloud(true);render()};$("file").click()}
-function addMember(){const n=$("newName").value.trim();if(!n)return;D.people.push({id:uid(),name:n,gids:[]});$("newName").value="";saveState();syncCloud(true);render()}
-function saveState(){localStorage.setItem("data",JSON.stringify(D))}
-function loadState(){try{D=JSON.parse(localStorage.getItem("data"))||D}catch(e){}}
+render();
 
-// 云配置
-function openConfig(){if(GIST_ID)$("cfg-gist").value=GIST_ID;if(GITHUB_TOKEN)$("cfg-token").value=GITHUB_TOKEN;$("configModal").classList.add("active")}
-function closeConfig(){$("configModal").classList.remove("active")}
-function saveConfig(){GIST_ID=$("cfg-gist").value.trim();GITHUB_TOKEN=$("cfg-token").value.trim();localStorage.setItem("gist_id",GIST_ID);localStorage.setItem("gist_token",GITHUB_TOKEN);closeConfig();showToast("已保存配置，正在同步");syncCloud(true)}
+function upPhoto(id){
+  pending=d=>{by(D.people,id).img=d; D.ts=Date.now(); saveState(); syncCloud(true); render()};
+  $("file").click();
+}
+function addMember(){
+  const n=$("newName").value.trim(); if(!n)return;
+  D.people.push({id:uid(),name:n,gids:[],img:''});
+  $("newName").value=""; D.ts=Date.now(); saveState(); syncCloud(true); render();
+}
 
-// 同步
 async function syncCloud(force){
   if(!GIST_ID||!GITHUB_TOKEN){showToast("先点右上角云配置");return}
   try{
     const raw="https://gist.githubusercontent.com/"+GIST_ID+"/raw/data.json";
-    if(force)try{const r=await fetch(raw);if(r.ok){const d=await r.json();if(d&&d.ts>D.ts)D=d}}catch(e){}
-    await fetch("https://api.github.com/gists/"+GIST_ID,{method:"PATCH",headers:{Authorization:"token "+GITHUB_TOKEN,Content-Type:"application/json"},body:JSON.stringify({files:{"data.json":{content:JSON.stringify({...D,ts:Date.now()})}}})});
-    showToast("☁ 已同步");saveState();render()
+    if(force)try{const r=await fetch(raw);if(r.ok){const d=await r.json();if(d&&d.ts>D.ts)D=d;showToast("拉取云端成功")}}catch(e){}
+    await fetch("https://api.github.com/gists/"+GIST_ID,{
+      method:"PATCH",
+      headers:{Authorization:"token "+GITHUB_TOKEN,Content-Type:"application/json"},
+      body:JSON.stringify({files:{"data.json":{content:JSON.stringify({...D,ts:Date.now()})}}})
+    });
+    showToast("☁ 已同步"); saveState(); render();
   }catch(e){showToast("同步失败，检查Token")}
 }
 
-function showToast(t){const o=$("toast");o.textContent=t;o.style.display="block";setTimeout(()=>o.style.display="none",1800)}
+// 云配置
+$("cfgBtn").onclick=()=>{
+  $("cfg-gist").value=GIST_ID; $("cfg-token").value=GITHUB_TOKEN;
+  $("configModal").classList.add("active");
+};
+$("saveCfg").onclick=()=>{
+  GIST_ID=$("cfg-gist").value.trim();
+  GITHUB_TOKEN=$("cfg-token").value.trim();
+  localStorage.setItem("gist_id",GIST_ID);
+  localStorage.setItem("gist_token",GITHUB_TOKEN);
+  $("configModal").classList.remove("active");
+  showToast("已保存配置，正在同步");
+  syncCloud(true);
+};
+$("syncBtn").onclick=()=>syncCloud(true);
+$("addBtn").onclick=addMember;
+$("tabP").onclick=()=>{render()};
+$("tabG").onclick=()=>{showToast("小组视图暂略")};
 
-// 绑定
-$("cfgBtn").onclick=openConfig;
-$("tabP").onclick=()=>{$("tabP").classList.add("active");$("tabG").classList.remove("active");render()};
-$("tabG").onclick=()=>{$("tabG").classList.add("active");$("tabP").classList.remove("active");render()};
-$("configModal").onclick=e=>{if(e.target===$("configModal"))closeConfig()};
+// 文件上传
+const fi=$("file");
+fi.onchange=function(){
+  const f=this.files[0]; this.value=""; if(!f||!pending)return;
+  const fr=new FileReader();
+  fr.onload=function(){
+    const im=new Image();
+    im.onload=function(){
+      const k=Math.min(1,pmax/Math.max(im.width,im.height));
+      const c=document.createElement("canvas");
+      c.width=Math.round(im.width*k); c.height=Math.round(im.height*k);
+      c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+      const cb=pending; pending=null;
+      cb(c.toDataURL("image/jpeg",.7));
+    };
+    im.src=fr.result;
+  };
+  fr.readAsDataURL(f);
+};
 
-// 隐藏的文件输入
-const fi=document.createElement("input");fi.type="file";fi.id="file";fi.accept="image/*";fi.style.display="none";document.body.appendChild(fi);
-fi.onchange=function(){const f=this.files[0];this.value="";if(!f||!pending)return;const fr=new FileReader();fr.onload=function(){const im=new Image();im.onload=function(){const k=Math.min(1,pmax/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);const cb=pending;pending=null;cb(c.toDataURL("image/jpeg",.7))};im.src=fr.result};fr.readAsDataURL(f)};
-
-loadState();render();
 if(GIST_ID&&GITHUB_TOKEN)syncCloud(true);
 </script>
 </body>
